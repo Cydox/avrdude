@@ -964,7 +964,8 @@ int avr_write(PROGRAMMER * pgm, AVRPART * p, char * memtype, int size,
      * tainted page, the write operation must also be invoked in order
      * to actually write the page buffer to memory.
      */
-    do_write = (m->tags[i] & TAG_ALLOCATED) != 0;
+    do_write = (m->tags[i & (~0x01)] & TAG_ALLOCATED ||
+                m->tags[(i & (~0x01)) + 1] & TAG_ALLOCATED) != 0;
     if (m->paged) {
       if (newpage) {
         page_tainted = do_write;
